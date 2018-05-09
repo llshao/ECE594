@@ -40,7 +40,7 @@ for ite=1:opt.ite_max
         error_diff=abs(error-error_old);
     end
     error_old=error;
-    if error<opt.tol || error_diff<opt.tol
+    if error<opt.tol || error_diff <opt.tol
         break;
     end
     if opt.print==true
