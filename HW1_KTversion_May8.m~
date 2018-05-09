@@ -3,14 +3,13 @@ clear
 close all
 Result.CP_Error=zeros(4,4,2);
 Result.Ite_Final=zeros(4,4,2);
-Result.Inner_Error=zeros(4,4,2);
+Result.Inner_Error=zeros(4,4);
 Result.Inner_Errorall=cell(4,4,2);
 i=0;
 %% plot && store control
 PLOT=true;
 STORE=true;
-KT=true;
-for r=[3]
+for r=[10]
     i=i+1;
     j=0;
     tic
@@ -32,18 +31,15 @@ for r=[3]
         %% Calculate the Innerproduct error
         X_CP1=ktensor(lambda1,A_all1);
         X_CP2=ktensor(lambda2,A_all2);
-        if KT==false
-        Inner_CP=innerprod(X_CP1,X_CP2);
-        Inner_CP1=innerprod(KT_P1,KT_P2);
-        Inner_Origin=innerprod(Tensor_R1,Tensor_R2);
-        else
         Inner_CP=KTInner(X_CP1,X_CP2);
         Inner_CP1=KTInner(KT_P1,KT_P2);
         Inner_Origin=KTInner(Tensor_R1,Tensor_R2);
-        end
+        if KT==true
+        Inner_CP=KTInner(X_CP1,X_CP2);
+        Inner_CP1=KTInner(KT_P1,KT_P2);
+        Inner_Origin=KTInner(Tensor_R1,Tensor_R2);
         Inner_error=Inner_Origin-Inner_CP;
         Inner_error1=Inner_Origin-Inner_CP1;
-        sprintf('Rank %d Dimension %d Inner_error %f',r,dim)
         disp('Inner Error:')
         disp(Inner_error)
         disp('Inner Error tool:')
@@ -58,12 +54,11 @@ for r=[3]
         if STORE==true
             Result.CP_Error(i,j,:)=[CP_error1,CP_error2];
             Result.Ite_Final(i,j,:)=[ite_final1,ite_final2];
-            Result.Inner_Error(i,j,1)=Inner_error;
-            Result.Inner_Error(i,j,2)=Inner_error1;
+            Result.Inner_Error(i,j)=Inner_error;
             Result.Inner_Errorall{i,j,1}=CP_errorall1;
             Result.Inner_Errorall{i,j,2}=CP_errorall2;
         end
-
+        sprintf('Rank %d Dimension %d Inner_error %5f',r,dim,Inner_error)
     end
 end
 if STORE==true

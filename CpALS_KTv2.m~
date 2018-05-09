@@ -14,7 +14,7 @@ else
     RANK=varargin{2};
 end
 if length(varargin)<3
-    opt.ite_max=1000;
+    opt.ite_max=10000;
     opt.tol=1e-8;
     opt.errdiff=1e-15;
     opt.print=false;
@@ -36,15 +36,6 @@ for ite=1:opt.ite_max
     %% Compute the error and error_diff
     error=norm(X-X_CP);
     error_all=[error_all;error];
-
-    if ite==1
-        error_diff=1;
-    else
-        error_diff=abs(error-error_old);
-    end
-    error_old=error;
-    if error<opt.tol || error_diff <opt.tol
-        break;
     %error_percent= error/norm(X);
     if mod(ite,10)==0
         if ite==10
@@ -53,10 +44,9 @@ for ite=1:opt.ite_max
             error_diff=abs(error-error_old);
         end
         error_old=error;
-        if error<opt.tol || error_diff< opt.errdiff
-            break;
-        end
-
+    end
+    if error<opt.tol || error_diff< opt.errdiff
+        break;
     end
     if opt.print==true
         fprintf(' @Ite=%d error= %f \n',ite, error);
