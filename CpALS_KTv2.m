@@ -36,16 +36,6 @@ for ite=1:opt.ite_max
     %% Compute the error and error_diff
     error=norm(X-X_CP);
     error_all=[error_all;error];
-
-    if ite==1
-        error_diff=1;
-    else
-        error_diff=abs(error-error_old);
-    end
-    error_old=error;
-    if error<opt.tol || error_diff <opt.tol
-        break;
-    %error_percent= error/norm(X);
     if mod(ite,10)==0
         if ite==10
             error_diff=1;
