@@ -1,4 +1,4 @@
-function [lambda,A_all,error,error_all,ite]=CpALS_KTv1(varargin)
+function [lambda,A_all,error,error_all,ite]=CpALS_KTv2(varargin)
 %% Input
 %varargin(1):X in R^[I1,I2,...,Id]
 %varargin(2): RANK
@@ -14,7 +14,7 @@ else
     RANK=varargin{2};
 end
 if length(varargin)<3
-    opt.ite_max=5000;
+    opt.ite_max=10000;
     opt.tol=1e-8;
     opt.print=false;
 else
@@ -26,9 +26,8 @@ error_all=[];
 for ite=1:opt.ite_max
     for n=1:length(I_all)
         V=Cal_V(A_all,n);%%element-wise product
-        U=Cal_U(A_all,n);%%khatirao product
-        X_modeN=tenmat(X,n);%%modeN unfolding
-        A_all{n}=X_modeN.data*U/V;%% Updating A(n)
+        U=KTXnKhatiro(X,A_all,n);%%modeN unfolding Khatirao product except n
+        A_all{n}=U/V;%% Updating A(n)
         [A_all{n},lambda]=NormA(A_all{n});%% Normalization 
     end
     X_CP=ktensor(lambda,A_all);

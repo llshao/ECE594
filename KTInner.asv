@@ -1,0 +1,11 @@
+function Inner=KTInner(X,Y)
+L = X.lambda * Y.lambda';
+for i = 1:ndims(X)
+    L = L .* (X.u{i}' * Y.u{i});
+end
+Inner = sum(L(:));
+
+for i = 1:ndims(X)
+    L = L .* (X.u{i}' * Y.u{i});
+end
+end
